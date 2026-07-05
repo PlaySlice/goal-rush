@@ -174,7 +174,40 @@ const Render = (() => {
       sky: ['#2a1548', '#6b3fa0', '#d99a3d'],
       stand1: '#3a2c5c', stand2: '#2c2148', roof: '#c9a227',
       stripes: ['#4e9e46', '#42903b'], grass: ['#3d8a37', '#2c6b28'],
-      glow: 'rgba(255,230,170,0.6)', weather: 'confetti',
+      glow: 'rgba(255,230,170,0.6)', weather: 'confetti', deco: 'bunting',
+      crowd: ['#ffd23e', '#e84040', '#ffffff', '#3d8ae8', '#9a5ce8', '#4ec97b'],
+    },
+    'std-sunset': {
+      sky: ['#3a1f4d', '#c2543a', '#f5a55c'],
+      stand1: '#40304e', stand2: '#332642', roof: '#241a30',
+      stripes: ['#4e9e46', '#42903b'], grass: ['#3d8a37', '#2c6b28'],
+      glow: 'rgba(255,190,120,0.5)', weather: null,
+    },
+    'std-beach': {
+      sky: ['#4aa8d8', '#7cc4e8', '#b8e2f5'],
+      stand1: '#3d7a9e', stand2: '#2f6485', roof: '#e8f2f8',
+      stripes: ['#e8d29a', '#dcc488'], grass: ['#d9c288', '#c4ad72'],
+      glow: 'rgba(255,250,220,0.35)', weather: null,
+      crowd: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ffffff', '#ff9f45'],
+    },
+    'std-neon': {
+      sky: ['#0b0b1e', '#1c0b3c', '#391160'],
+      stand1: '#1e1433', stand2: '#150e26', roof: '#0d0918',
+      stripes: ['#2d7a3a', '#256a30'], grass: ['#1f5c28', '#174d1f'],
+      glow: 'rgba(80,240,255,0.5)', weather: null,
+      crowd: ['#39ff88', '#ff2d95', '#00e5ff', '#ffe93c', '#b44dff', '#ffffff'],
+    },
+    'std-volcano': {
+      sky: ['#1a0505', '#511208', '#93300f'],
+      stand1: '#3a1e18', stand2: '#2a1410', roof: '#180c08',
+      stripes: ['#4e6b30', '#405c28'], grass: ['#3d5228', '#2c421c'],
+      glow: 'rgba(255,120,50,0.55)', weather: 'embers',
+    },
+    'std-space': {
+      sky: ['#04050e', '#0c1024', '#1d2540'],
+      stand1: '#141a2e', stand2: '#0e1322', roof: '#2a3350',
+      stripes: ['#8f97ad', '#7d8598'], grass: ['#6f7789', '#5a6274'],
+      glow: 'rgba(180,200,255,0.45)', weather: null, deco: 'stars',
     },
   };
 
@@ -229,9 +262,7 @@ const Render = (() => {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
-    const crowdColors = themeId === 'std-cup'
-      ? ['#ffd23e', '#e84040', '#ffffff', '#3d8ae8', '#9a5ce8', '#4ec97b']
-      : ['#e8d44d', '#d94f4f', '#f0f0f0', '#5aa9e6', '#e8944d', '#7bc47f'];
+    const crowdColors = t.crowd || ['#e8d44d', '#d94f4f', '#f0f0f0', '#5aa9e6', '#e8944d', '#7bc47f'];
     for (let row = 0; row < 14; row++) {
       const y = 292 + row * 14.5;
       for (let x = 6; x < W; x += 11) {
@@ -248,8 +279,8 @@ const Render = (() => {
     c.fillStyle = t.roof;
     c.fillRect(0, 272, W, 12);
 
-    // World Cup golden bunting
-    if (themeId === 'std-cup') {
+    // Theme decorations
+    if (t.deco === 'bunting') {
       c.fillStyle = '#ffd23e';
       for (let x = 10; x < W; x += 40) {
         c.beginPath();
@@ -259,6 +290,24 @@ const Render = (() => {
         c.closePath();
         c.fill();
       }
+    }
+    if (t.deco === 'stars') {
+      for (let i = 0; i < 60; i++) {
+        c.fillStyle = `rgba(255,255,255,${0.35 + rand() * 0.65})`;
+        c.beginPath();
+        c.arc(rand() * W, rand() * 250, 0.6 + rand() * 1.2, 0, Math.PI * 2);
+        c.fill();
+      }
+      // A distant Earth on the horizon
+      c.fillStyle = '#3d6fa8';
+      c.beginPath();
+      c.arc(400, 90, 24, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = 'rgba(110, 190, 120, 0.8)';
+      c.beginPath();
+      c.arc(394, 84, 9, 0, Math.PI * 2);
+      c.arc(408, 98, 7, 0, Math.PI * 2);
+      c.fill();
     }
 
     return cv;
@@ -843,6 +892,11 @@ const Shop = (() => {
     { id: 'std-snow', name: 'Snowy Night', price: 150, tab: 'ARENA', slot: 'stadium' },
     { id: 'std-rain', name: 'Rainstorm', price: 150, tab: 'ARENA', slot: 'stadium' },
     { id: 'std-cup', name: 'Cup Final', price: 300, tab: 'ARENA', slot: 'stadium' },
+    { id: 'std-sunset', name: 'Golden Hour', price: 120, tab: 'ARENA', slot: 'stadium' },
+    { id: 'std-beach', name: 'Beach Kick-Off', price: 180, tab: 'ARENA', slot: 'stadium' },
+    { id: 'std-neon', name: 'Neon Nights', price: 200, tab: 'ARENA', slot: 'stadium' },
+    { id: 'std-volcano', name: 'Volcano Pit', price: 250, tab: 'ARENA', slot: 'stadium' },
+    { id: 'std-space', name: 'Moon League', price: 300, tab: 'ARENA', slot: 'stadium' },
   ];
 
   const TABS = ['HEADS', 'BALLS', 'TRAILS', 'ARENA'];
@@ -1119,18 +1173,23 @@ const Shop = (() => {
   }
 
   function drawArenaPreview(ctx, id, cx, cy) {
-    const skies = {
-      'std-classic': ['#3b5a9a', '#7a9cc9'],
-      'std-snow': ['#20344f', '#4f6a8f'],
-      'std-rain': ['#232e3a', '#3d4e5c'],
-      'std-cup': ['#6b3fa0', '#d99a3d'],
-    }[id] || ['#3b5a9a', '#7a9cc9'];
+    const look = {
+      'std-classic': { sky: ['#3b5a9a', '#7a9cc9'], pitch: '#4e9e46' },
+      'std-snow': { sky: ['#20344f', '#4f6a8f'], pitch: '#6f9f6a' },
+      'std-rain': { sky: ['#232e3a', '#3d4e5c'], pitch: '#3f7d39' },
+      'std-cup': { sky: ['#6b3fa0', '#d99a3d'], pitch: '#4e9e46' },
+      'std-sunset': { sky: ['#c2543a', '#f5a55c'], pitch: '#4e9e46' },
+      'std-beach': { sky: ['#5db8e8', '#b8e2f5'], pitch: '#e8d29a' },
+      'std-neon': { sky: ['#1c0b3c', '#391160'], pitch: '#2d7a3a' },
+      'std-volcano': { sky: ['#511208', '#93300f'], pitch: '#4e6b30' },
+      'std-space': { sky: ['#04050e', '#1d2540'], pitch: '#8f97ad' },
+    }[id] || { sky: ['#3b5a9a', '#7a9cc9'], pitch: '#4e9e46' };
     const g = ctx.createLinearGradient(0, cy - 20, 0, cy + 12);
-    g.addColorStop(0, skies[0]);
-    g.addColorStop(1, skies[1]);
+    g.addColorStop(0, look.sky[0]);
+    g.addColorStop(1, look.sky[1]);
     ctx.fillStyle = g;
     ctx.fillRect(cx - 34, cy - 20, 68, 30);
-    ctx.fillStyle = '#4e9e46';
+    ctx.fillStyle = look.pitch;
     ctx.fillRect(cx - 34, cy + 10, 68, 12);
     if (id === 'std-snow') {
       ctx.fillStyle = '#ffffff';
@@ -1152,6 +1211,39 @@ const Shop = (() => {
       ctx.font = '14px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('🏆', cx, cy + 4);
+    }
+    if (id === 'std-sunset') {
+      ctx.fillStyle = '#ffe08a';
+      ctx.beginPath();
+      ctx.arc(cx + 18, cy - 6, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (id === 'std-beach') {
+      ctx.font = '13px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🌴', cx - 20, cy + 2);
+    }
+    if (id === 'std-neon') {
+      ctx.fillStyle = '#00e5ff';
+      ctx.fillRect(cx - 26, cy - 4, 14, 2);
+      ctx.fillStyle = '#ff2d95';
+      ctx.fillRect(cx + 10, cy - 10, 14, 2);
+    }
+    if (id === 'std-volcano') {
+      for (let i = 0; i < 6; i++) {
+        ctx.fillStyle = ['#ff8a3c', '#ffb054', '#e85c20'][i % 3];
+        ctx.fillRect(cx - 24 + i * 9, cy - 14 + (i % 3) * 7, 2, 2);
+      }
+    }
+    if (id === 'std-space') {
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 8; i++) {
+        ctx.fillRect(cx - 28 + i * 8, cy - 16 + ((i * 5) % 12), 1.5, 1.5);
+      }
+      ctx.fillStyle = '#3d6fa8';
+      ctx.beginPath();
+      ctx.arc(cx + 22, cy - 10, 5, 0, Math.PI * 2);
+      ctx.fill();
     }
     ctx.strokeStyle = '#0d3b8c';
     ctx.lineWidth = 1.5;
@@ -1621,6 +1713,13 @@ const Leaderboard = (() => {
           color: ['#ffd23e', '#e84040', '#4ec97b', '#3d8ae8', '#e86fe8'][Math.floor(Math.random() * 5)],
           spin: Math.random() * Math.PI,
         });
+      } else if (kind === 'embers') {
+        weather.push({
+          x: Math.random() * (W + 60), y: H + 6,
+          vx: (Math.random() - 0.5) * 40, vy: -35 - Math.random() * 55,
+          size: 1.2 + Math.random() * 2.2, kind,
+          color: ['#ff8a3c', '#ffb054', '#e85c20', '#ffd08a'][Math.floor(Math.random() * 4)],
+        });
       }
     }
     for (const f of weather) {
@@ -1628,7 +1727,7 @@ const Leaderboard = (() => {
       f.y += f.vy * dt;
       if (f.spin !== undefined) f.spin += dt * 4;
     }
-    weather = weather.filter(f => f.y < H + 10 && f.x > -30);
+    weather = weather.filter(f => f.y < H + 10 && f.y > -20 && f.x > -30);
   }
 
   function drawWeather() {
@@ -1645,6 +1744,13 @@ const Leaderboard = (() => {
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
         ctx.fill();
+      } else if (f.kind === 'embers') {
+        ctx.fillStyle = f.color;
+        ctx.globalAlpha = 0.5 + 0.5 * Math.abs(Math.sin(f.y * 0.05));
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
       } else {
         ctx.save();
         ctx.translate(f.x, f.y);
